@@ -39,8 +39,10 @@ jobs:
         uses: mikefarah/yq@master
         with:
           cmd: |
-            [ "$(yq '.version' frontend/package.json)" = "$(yq '.version' backend/package.json)" ] || \
-              echo "Backend and Frontend version numbers do not match" && exit 1
+            if [ "$(yq '.version' frontend/package.json)" != "$(yq '.version' backend/package.json)" ]; then
+              echo "Backend and Frontend version numbers do not match"
+              exit 1
+            fi
 
       - name: Get version
         id: version
