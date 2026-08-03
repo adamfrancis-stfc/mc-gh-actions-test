@@ -55,7 +55,7 @@ jobs:
         uses: mikefarah/yq@master
         with:
           cmd: |
-            yq -i '.info.version = ${{ steps.version.outputs.result }}' ./frontend/services/mc-openapi.yaml
+            yq -i '.info.version = "${{ steps.version.outputs.result }}"' ./frontend/services/mc-openapi.yaml
 
       - name: Create release branch
         run: |
