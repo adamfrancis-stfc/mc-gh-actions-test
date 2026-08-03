@@ -85,7 +85,7 @@ jobs:
 
       - name: Commit release notes
         run: |
-          echo ${{ steps.release-notes.outputs.release-notes }} >> Release-Notes/${{ steps.version.outputs.result }}.md
+          echo "${{ steps.release-notes.outputs.release-notes }}" >> Release-Notes/${{ steps.version.outputs.result }}.md
           git add Release-Notes/${{ steps.version.outputs.result }}.md
           git commit -m "Add release notes"
           git push
