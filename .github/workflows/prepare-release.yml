@@ -82,6 +82,7 @@ jobs:
           tag_name: ${{ steps.version.outputs.result }}
           target_commitish: release_${{ steps.version.outputs.result }}
           body: ${{ steps.release-notes.outputs.release-notes }}
+          draft: true
 
       - name: Commit release notes
         run: |
@@ -98,3 +99,5 @@ jobs:
             --base "master" \
             --head "release_${{ steps.version.outputs.result }}" \
             --label "type:release"
+        env:
+          GH_TOKEN: ${{ github.token }}
