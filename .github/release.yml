@@ -1,0 +1,14 @@
+changelog:
+  exclude:
+    labels:
+      - type:mergeback
+  categories:
+    - title: "Features & Bug Fixes"
+      labels:
+        - "*"
+      exclude:
+        labels:
+          - dependencies
+    - title: "Dependency Updates"
+      labels:
+        - dependencies

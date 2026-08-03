@@ -1,0 +1,99 @@
+name: Prepare Release
+on:
+  workflow_dispatch:
+    inputs:
+      releaseType:
+        type: choice
+        description: 'Release Type'
+        required: true
+        options:
+          - patch
+          - minor
+          - major
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: 'prepare-release'
+  cancel-in-progress: true
+
+jobs:
+  prepare-release:
+    name: Prepare Release
+    runs-on: fase-self-hosted-dind
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          ref: develop
+
+      - name: Update package version numbers
+        run: |
+          (cd backend && npm version ${{ inputs.releaseType }})
+          (cd frontend && npm version ${{ inputs.releaseType }})
+
+      - name: Check versions match
+        uses: mikefarah/yq@master
+        with:
+          cmd: |
+            [ "$(yq '.version' frontend/package.json)" = "$(yq '.version' backend/package.json)" ] || \
+              echo "Backend and Frontend version numbers do not match" && exit 1
+
+      - name: Get version
+        id: version
+        uses: mikefarah/yq@master
+        with:
+          cmd: |
+            yq '.version' backend/package.json
+
+      - name: Update OpenAPI version number
+        uses: mikefarah/yq@master
+        with:
+          cmd: |
+            yq -i '.info.version = "${{ steps.version.outputs.result }}"' ./frontend/services/mc-openapi.yaml
+
+      - name: Create release branch
+        run: |
+          git checkout -b release_${{ steps.version.outputs.result }}
+
+      - name: Push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add ./backend/kubernetes/prod/deployment.yml ./frontend/kubernetes/prod/deployment.yml
+          git commit -m "Update version numbers to ${{ steps.version.outputs.result }}"
+          git push -u origin release_${{ steps.version.outputs.result }}
+
+      - name: Generate release notes
+        id: release-notes
+        uses: RedCrafter07/release-notes-action@v1.0.1
+        with:
+          tag-name: ${{ steps.version.outputs.result }}
+          branch: release_${{ steps.version.outputs.result }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create draft release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ steps.version.outputs.result }}
+          target_commitish: release_${{ steps.version.outputs.result }}
+          body: ${{ steps.release-notes.outputs.release-notes }}
+
+      - name: Commit release notes
+        run: |
+          echo ${{ steps.release-notes.outputs.release-notes }} >> Release-Notes/${{ steps.version.outputs.result }}.md
+          git add Release-Notes/${{ steps.version.outputs.result }}.md
+          git commit -m "Add release notes"
+          git push
+
+      - name: Create release PR
+        run: |
+          gh pr create \
+            --title "Release ${{ steps.version.outputs.result }}" \
+            --body "${{ steps.release-notes.outputs.release-notes }}" \
+            --base "master" \
+            --head "release_${{ steps.version.outputs.result }}" \
+            --label "type:release"
