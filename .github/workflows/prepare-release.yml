@@ -22,7 +22,7 @@ concurrency:
 jobs:
   prepare-release:
     name: Prepare Release
-    runs-on: fase-self-hosted-dind
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
