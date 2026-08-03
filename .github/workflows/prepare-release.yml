@@ -49,7 +49,7 @@ jobs:
         uses: mikefarah/yq@master
         with:
           cmd: |
-            yq '.version' backend/package.json
+            yq -r '.version' backend/package.json
 
       - name: Update OpenAPI version number
         uses: mikefarah/yq@master
@@ -65,8 +65,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add ./backend/kubernetes/prod/deployment.yml ./frontend/kubernetes/prod/deployment.yml
-          git commit -m "Update version numbers to ${{ steps.version.outputs.result }}"
+          git commit -a -m "Update version numbers to ${{ steps.version.outputs.result }}"
           git push -u origin release_${{ steps.version.outputs.result }}
 
       - name: Generate release notes
