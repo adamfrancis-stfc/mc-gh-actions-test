@@ -52,7 +52,7 @@ jobs:
           context: backend/
           file: backend/deploy.Dockerfile
           push: true
-          tags: adamfrancis-stfc/manage-consumables-backend:${{ steps.version.outputs.result }}
+          tags: ghcr.io/adamfrancis-stfc/manage-consumables-backend:${{ steps.version.outputs.result }}
 
   frontend:
     name: Frontend
@@ -88,7 +88,7 @@ jobs:
           context: frontend/
           file: frontend/deploy.Dockerfile
           push: true
-          tags: adamfrancis-stfc/manage-consumables-frontend:${{ steps.version.outputs.result }}
+          tags: ghcr.io/adamfrancis-stfc/manage-consumables-frontend:${{ steps.version.outputs.result }}
           build-args: BUILD_COMMAND=prod
 
   deploy:
