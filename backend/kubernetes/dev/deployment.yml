@@ -3,4 +3,4 @@ spec:
     spec:
       containers:
         - name: manage-consumables-backend
-          image: ghcr.io/isisbusapps/manage-consumables-backend@sha256:36d76b5d3289ad7fd68228de31c714cddef5a93da0b3f30a0762c0e7b0c4b0b5
+          image: ghcr.io/isisbusapps/manage-consumables-backend@sha256:e5d8b56d2d80246ad3a6def915cf8ca3d1531ea4f5b95c1d276e5fa6c7131564
