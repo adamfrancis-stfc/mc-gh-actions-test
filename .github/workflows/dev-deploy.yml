@@ -15,7 +15,7 @@ on:
     paths-ignore:
       - README.md
       - .gitignore
-      - Release-Notes
+      - Release-Notes/**
       - backend/kubernetes/**
       - frontend/kubernetes/**
       - tools/**
@@ -59,6 +59,7 @@ jobs:
           context: backend/
           file: backend/deploy.Dockerfile
           tags: ghcr.io/adamfrancis-stfc/manage-consumables-backend:dev
+          push: true
 
   frontend:
     name: Frontend
@@ -90,6 +91,7 @@ jobs:
           file: frontend/deploy.Dockerfile
           tags: ghcr.io/adamfrancis-stfc/manage-consumables-frontend:dev
           build-args: BUILD_COMMAND=dev
+          push: true
 
   deploy:
     name: Deploy

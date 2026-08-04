@@ -116,14 +116,14 @@ jobs:
         uses: mikefarah/yq@master
         with:
           cmd: |
-            yq -i '.spec.template.spec.containers[0].image = "ghcr.io/adamfrancis-stfc/manage-consumables-backend@${{ steps.version.outputs.result }}"' \
+            yq -i '.spec.template.spec.containers[0].image = "ghcr.io/adamfrancis-stfc/manage-consumables-backend:${{ steps.version.outputs.result }}"' \
               "./backend/kubernetes/prod/deployment.yml"
 
       - name: Update frontend image reference
         uses: mikefarah/yq@master
         with:
           cmd: |
-            yq -i '.spec.template.spec.containers[0].image = "ghcr.io/adamfrancis-stfc/manage-consumables-frontend@${{ steps.version.outputs.result }}"' \
+            yq -i '.spec.template.spec.containers[0].image = "ghcr.io/adamfrancis-stfc/manage-consumables-frontend:${{ steps.version.outputs.result }}"' \
               "./frontend/kubernetes/prod/deployment.yml"
 
       - name: Push changes
@@ -133,10 +133,6 @@ jobs:
           git add ./backend/kubernetes/prod/deployment.yml ./frontend/kubernetes/prod/deployment.yml
           git commit -m "chore: update prod deployment version"
           git push
-
-      - name: Publish release
-        run: |
-          gh release edit "${{ steps.version.outputs.result }}" --draft=false
 
       - name: Create mergeback PR
         env:
@@ -148,3 +144,9 @@ jobs:
             --base "${{ github.event.repository.default_branch }}" \
             --head "master" \
             --label "type:mergeback"
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release edit "${{ steps.version.outputs.result }}" --draft=false
