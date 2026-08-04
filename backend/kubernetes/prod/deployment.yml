@@ -3,4 +3,4 @@ spec:
     spec:
       containers:
         - name: manage-consumables-backend
-          image: ghcr.io/adamfrancis-stfc/manage-consumables-backend@1.1.2
+          image: ghcr.io/adamfrancis-stfc/manage-consumables-backend:1.1.3
