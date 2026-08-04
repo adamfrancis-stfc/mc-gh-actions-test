@@ -3,4 +3,4 @@ spec:
     spec:
       containers:
         - name: manage-consumables-frontend
-          image: ghcr.io/isisbusapps/manage-consumables-frontend@sha256:3e968d14a422d64290b6abd2a549780132458949ee008f508654bd66f07d1c95
+          image: ghcr.io/isisbusapps/manage-consumables-frontend@sha256:4587e91716019d8648ba31bdce83e2a79befc604387d10d59181077ee4b46e5e
