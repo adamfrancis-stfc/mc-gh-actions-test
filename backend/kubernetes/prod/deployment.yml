@@ -1,0 +1,6 @@
+spec:
+  template:
+    spec:
+      containers:
+        - name: manage-consumables-backend
+          image: ghcr.io/adamfrancis-stfc/manage-consumables-backend:2.0.0
