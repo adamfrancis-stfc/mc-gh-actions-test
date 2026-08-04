@@ -135,6 +135,8 @@ jobs:
           git push
 
       - name: Publish release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release edit "${{ steps.version.outputs.result }}" --draft=false
 
