@@ -116,14 +116,14 @@ jobs:
         uses: mikefarah/yq@master
         with:
           cmd: |
-            yq -i '.spec.template.spec.containers[0].image = "ghcr.io/adamfrancis-stfc/manage-consumables-backend@${{ steps.version.outputs.result }}"' \
+            yq -i '.spec.template.spec.containers[0].image = "ghcr.io/adamfrancis-stfc/manage-consumables-backend:${{ steps.version.outputs.result }}"' \
               "./backend/kubernetes/prod/deployment.yml"
 
       - name: Update frontend image reference
         uses: mikefarah/yq@master
         with:
           cmd: |
-            yq -i '.spec.template.spec.containers[0].image = "ghcr.io/adamfrancis-stfc/manage-consumables-frontend@${{ steps.version.outputs.result }}"' \
+            yq -i '.spec.template.spec.containers[0].image = "ghcr.io/adamfrancis-stfc/manage-consumables-frontend:${{ steps.version.outputs.result }}"' \
               "./frontend/kubernetes/prod/deployment.yml"
 
       - name: Push changes
